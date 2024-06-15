@@ -27,10 +27,8 @@ from .authentication import validate_api_key, validate_master_key
 from utils.Translator import Translator
 from utils.I18nMiddleware import I18nMiddleware
 
-
 titleDoc = "Linka API"
 urlIcon = "https://pbs.twimg.com/profile_images/1344769935004889088/v2e-nR4V_400x400.jpg"
-
 
 app = FastAPI(
     title= titleDoc,
@@ -53,8 +51,10 @@ def overridden_swagger(request: Request):
     return get_swagger_ui_html(openapi_url="/openapi.json", title= titleDoc, swagger_favicon_url=urlIcon)
 
 @app.get("/redoc", include_in_schema=False)
-def overridden_redoc():
-	return get_redoc_html(openapi_url="/openapi.json", title= titleDoc, redoc_favicon_url=urlIcon)
+def overridden_redoc(request: Request):
+    translator = Translator(request.state.locale)
+    app.description = translator.t('messages.description')
+    return get_redoc_html(openapi_url="/openapi.json", title= titleDoc, redoc_favicon_url=urlIcon)
 
 
 app.add_middleware(

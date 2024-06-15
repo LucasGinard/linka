@@ -16,10 +16,9 @@ class I18nMiddleware(BaseHTTPMiddleware):
 
         languages = [lang.split(';')[0] for lang in locale.split(',')]
 
-        locale = 'en'  # Predeterminado a 'en' si no se encuentra ningún idioma de la lista blanca
+        locale = 'en'
         for lang in languages:
             if lang in self.WHITE_LIST:
-                print(lang)
                 locale = lang
                 break
 
