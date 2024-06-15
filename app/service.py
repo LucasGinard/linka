@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security.api_key import APIKey
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
@@ -24,39 +24,16 @@ from . import schemas
 from . import reports
 from .db import db
 from .authentication import validate_api_key, validate_master_key
+from utils.Translator import Translator
+from utils.I18nMiddleware import I18nMiddleware
+
 
 titleDoc = "Linka API"
 urlIcon = "https://pbs.twimg.com/profile_images/1344769935004889088/v2e-nR4V_400x400.jpg"
 
-descripcion_spanish = """
-**📃Bienvenida a la Documentación de AireLibre**
-
-Esta documentación proporciona información sobre cómo consumir y utilizar los datos de AireLibre. 
-
-Te invitamos a explorar y contribuir al proyecto para mejorar la conciencia sobre la calidad del aire en nuestra comunidad.
-
-AireLibre es un proyecto de código abierto bajo la licencia AGPLv3
-
-¡Gracias por unirte a nosotros en este esfuerzo por hacer que la información sobre la calidad del aire sea accesible para todos!
-"""
-
-# Inglés
-descripcion_english = """
-**📃 Welcome to AireLibre Documentation**
-
-This documentation provides information on how to consume and utilize AireLibre's data.
-
-We invite you to explore and contribute to the project to enhance awareness of air quality in our community.
-
-AireLibre is an open-source project licensed under AGPLv3.
-
-Thank you for joining us in this effort to make air quality information accessible to everyone!
-"""
-descripcion_combinada = f"{descripcion_spanish.strip()}\n\n{descripcion_english.strip()}"
 
 app = FastAPI(
     title= titleDoc,
-    description= descripcion_combinada,
     version= "1.0.2",
 	docs_url= None,
 	redoc_url= None,
@@ -67,9 +44,13 @@ app = FastAPI(
     }
 )
 
+app.add_middleware(I18nMiddleware)
+
 @app.get("/docs", include_in_schema=False)
-def overridden_swagger():
-	return get_swagger_ui_html(openapi_url="/openapi.json", title= titleDoc, swagger_favicon_url=urlIcon)
+def overridden_swagger(request: Request):
+    translator = Translator(request.state.locale)
+    app.description = translator.t('messages.description')
+    return get_swagger_ui_html(openapi_url="/openapi.json", title= titleDoc, swagger_favicon_url=urlIcon)
 
 @app.get("/redoc", include_in_schema=False)
 def overridden_redoc():
