@@ -23,7 +23,6 @@ import hashlib
 from sqlalchemy import func
 from databases.core import Database
 from typing import Dict, List, Set, Tuple, Union
-from enum import Enum
 
 from .db import metadata
 
