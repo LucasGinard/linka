@@ -199,8 +199,3 @@ class Provider:
         query = query.where(providers.c.api_key_hash == api_key_hash)
         provider = await db.fetch_one(query)
         return provider[0] if provider else None
-
-class TagsEnum(str, Enum):
-    apiKeyMaster = "Requests with Master apiKey 🔑"
-    apiKey = "Requests with apiKey 🔑"
-    public = "Requests Public 🌎"

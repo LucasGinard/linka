@@ -45,7 +45,7 @@ async def shutdown():
     await db.disconnect()
 
 
-@app.post("/api/v1/providers", response_model=schemas.APIKey, tags=[models.TagsEnum.apiKeyMaster])
+@app.post("/api/v1/providers", response_model=schemas.APIKey, tags=[schemas.TagsEnum.apiKeyMaster])
 async def create_provider(
     provider: schemas.Provider, key: APIKey = Depends(validate_master_key)
 ):
@@ -53,26 +53,26 @@ async def create_provider(
     return schemas.APIKey(key=key)
 
 
-@app.get("/api/v1/providers", tags=[models.TagsEnum.apiKeyMaster])
+@app.get("/api/v1/providers", tags=[schemas.TagsEnum.apiKeyMaster])
 async def list_providers(key: APIKey = Depends(validate_master_key)):
     return [
         schemas.Provider.from_orm(s) for s in await models.Provider.get_providers(db)
     ]
 
 
-@app.delete("/api/v1/providers/{provider}", tags=[models.TagsEnum.apiKeyMaster])
+@app.delete("/api/v1/providers/{provider}", tags=[schemas.TagsEnum.apiKeyMaster])
 async def delete_provider(provider: str, key: APIKey = Depends(validate_master_key)):
     return await models.Provider.revoke_all_keys(db, provider)
 
 
-@app.post("/api/v1/measurements", tags=[models.TagsEnum.apiKey])
+@app.post("/api/v1/measurements", tags=[schemas.TagsEnum.apiKey])
 async def post(
     measurements: List[schemas.Measurement], provider: str = Depends(validate_api_key)
 ):
     await models.Measurement.store(db, [m.to_orm(provider) for m in measurements])
 
 
-@app.get("/api/v1/measurements", response_model=List[schemas.Measurement], tags=[models.TagsEnum.public])
+@app.get("/api/v1/measurements", response_model=List[schemas.Measurement], tags=[schemas.TagsEnum.public])
 async def get(query: schemas.QueryParams = Depends(schemas.QueryParams)):
     return [
         schemas.Measurement.from_orm(m)
@@ -80,17 +80,17 @@ async def get(query: schemas.QueryParams = Depends(schemas.QueryParams)):
     ]
 
 
-@app.get("/api/v1/aqi", response_model=List[schemas.Report], tags=[models.TagsEnum.public])
+@app.get("/api/v1/aqi", response_model=List[schemas.Report], tags=[schemas.TagsEnum.public])
 async def aqi(query: schemas.QueryParams = Depends(schemas.QueryParams)):
     return await reports.AQI.generate(db, query)
 
 
-@app.get("/api/v1/stats", response_model=List[schemas.ReportStats], tags=[models.TagsEnum.public])
+@app.get("/api/v1/stats", response_model=List[schemas.ReportStats], tags=[schemas.TagsEnum.public])
 async def stats(query: schemas.QueryParams = Depends(schemas.QueryParams)):
     return await reports.Stats.generate(db, query)
 
 
-@app.get("/api/v1/status", response_model=schemas.ServiceStatus, tags=[models.TagsEnum.public])
+@app.get("/api/v1/status", response_model=schemas.ServiceStatus, tags=[schemas.TagsEnum.public])
 async def status():
     status = schemas.ServiceStatus()
 

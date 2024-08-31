@@ -307,3 +307,8 @@ class ServiceStatus(BaseModel):
         title="Database",
         description="Operational status of the database",
     )
+
+class TagsEnum(str, Enum):
+    apiKeyMaster = "Requests with Master apiKey 🔑"
+    apiKey = "Requests with apiKey 🔑"
+    public = "Requests Public 🌎"
