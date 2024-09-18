@@ -124,37 +124,37 @@ class Measurement(BaseModel):
         return _dict
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 @dataclass
 class QueryParams:
-    source: str = Query(
+    source: Optional[str] = Query(
         None,
         title="Source",
         description="Include measurements from this source only",
     )
-    start: datetime = Query(
+    start: Optional[datetime] = Query(
         None,
         title="Start",
         description="Include measurements after this date and time",
     )
-    end: datetime = Query(
+    end: Optional[datetime] = Query(
         None,
         title="End",
         description="Include measurements before this date and time",
     )
-    longitude: float = Query(
+    longitude: Optional[float] = Query(
         None,
         title="Longitude",
         description="Target longitude coordinate",
     )
-    latitude: float = Query(
+    latitude: Optional[float] = Query(
         None,
         title="Latitude",
         description="Target latitude coordinate",
     )
-    distance: float = Query(
+    distance: Optional[float] = Query(
         None,
         title="Distance",
         description="Include measurements that are this kilometers far from the target",
@@ -174,7 +174,7 @@ class Provider(BaseModel):
     )
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class APIKey(BaseModel):
@@ -233,7 +233,7 @@ class Report(BaseModel):
         title="Latitude",
         description="Target latitude coordinate",
     )
-    quality: Quality = Field(
+    quality: Optional[Quality] = Field(
         None,
         title="Quality",
         description="Quality according to AQI",

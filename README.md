@@ -11,6 +11,8 @@ $ source ./env/bin/activate
 $ pip install -r requirements.txt
 ```
 
+**NOTE:** Python 3.12 is not yet supported.
+
 ## Setup
 
 ```

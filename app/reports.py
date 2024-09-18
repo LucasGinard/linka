@@ -71,9 +71,11 @@ class AQI:
         breakpoint_index = CONCENTRATIONS.index(concentration)
         breakpoint = BREAKPOINTS[breakpoint_index]
 
-        index = (
-            (breakpoint[1] - breakpoint[0]) / (concentration[1] - concentration[0])
-        ) * (source.pm2dot5_average - concentration[0]) + breakpoint[0]
+        index = int(
+            ((breakpoint[1] - breakpoint[0]) / (concentration[1] - concentration[0]))
+            * (source.pm2dot5_average - concentration[0])
+            + breakpoint[0]
+        )
         index_breakpoint = next(
             (b for b in BREAKPOINTS if index <= b[1]),
             BREAKPOINTS[-1],
