@@ -127,7 +127,7 @@ class Measurement:
                 ]
             )
 
-        select = sqlalchemy.select(measurements_stats)
+        select = sqlalchemy.select(*measurements_stats)
         select = select.group_by(
             measurements.c.sensor,
             measurements.c.source,
@@ -166,8 +166,9 @@ class Provider:
     @staticmethod
     async def get_providers(db: Database) -> List[Tuple[str, int]]:
         query = sqlalchemy.select(
-            [providers.c.provider, sqlalchemy.func.count(providers.c.provider)]
-        ).group_by(providers.c.provider)
+            providers.c.provider, sqlalchemy.func.count(providers.c.provider)
+        )
+        query = query.group_by(providers.c.provider)
         query = query.order_by(sqlalchemy.asc(providers.c.provider))
         return await db.fetch_all(query)
 
@@ -187,14 +188,14 @@ class Provider:
 
     @staticmethod
     async def get_all_keys(db: Database) -> Set[str]:
-        query = sqlalchemy.select([providers.c.api_key_hash])
+        query = sqlalchemy.select(providers.c.api_key_hash)
         query = query.order_by(sqlalchemy.asc(providers.c.provider))
         keys = await db.fetch_all(query)
         return {k[0] for k in keys}
 
     @staticmethod
     async def get_provider_for_key(db: Database, api_key_hash: str) -> Union[str, None]:
-        query = sqlalchemy.select([providers.c.id, providers.c.api_key_hash])
+        query = sqlalchemy.select(providers.c.id, providers.c.api_key_hash)
         query = query.where(providers.c.api_key_hash == api_key_hash)
         provider = await db.fetch_one(query)
         return provider[0] if provider else None

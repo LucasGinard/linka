@@ -43,7 +43,7 @@ measurements = [
         "co2": 1000.0,
         "longitude": -57.521369,
         "latitude": -25.194156,
-        "recorded": "2020-10-24T20:47:57.370721+00:00",
+        "recorded": "2020-10-24T20:47:57.370721Z",
     },
     {
         "sensor": "nullable",
@@ -59,7 +59,7 @@ measurements = [
         "co2": None,
         "longitude": -57.521369,
         "latitude": -25.194156,
-        "recorded": "2020-10-24T20:47:57.370721+00:00",
+        "recorded": "2020-10-24T20:47:57.370721Z",
     },
     {
         "sensor": "test",
@@ -75,7 +75,7 @@ measurements = [
         "co2": 200.0,
         "longitude": -57.521369,
         "latitude": -25.194156,
-        "recorded": "2020-10-24T20:47:57.370721+00:00",
+        "recorded": "2020-10-24T20:47:57.370721Z",
     },
 ]
 aqi = [
