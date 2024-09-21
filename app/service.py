@@ -43,16 +43,6 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-async def startup():
-    await db.connect()
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    await db.disconnect()
-
-
 @app.post(
     "/api/v1/providers",
     response_model=schemas.APIKey,
